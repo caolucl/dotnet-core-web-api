@@ -1,0 +1,71 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+
+trigger:
+  branches:
+    include:
+    - refs/heads/main
+  #paths:
+  # include:
+  #   - aspnet-api/*
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: refs/heads/$(Build.SourceBranchName)
+variables:
+
+- name: appName
+  value : 'aspnet-api'
+- name: dockerfilePath
+  value : '$(Build.SourcesDirectory)/Dockerfile'
+- name: imageName
+  value: sample/$(appName)
+#- name: system_accesstoken
+#  value : $(System.AccessToken)
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - checkout: self
+      persistCredentials: true
+    #  Build and push an image to container registry
+    #- task: Docker@2
+    #  displayName: Login to ACR
+    #  inputs:
+    #    command: login
+    #    containerRegistry: $(azure-container-registry)
+
+    - task: Docker@2
+      displayName: Build an image for $(appName)
+      inputs:
+        command: build
+        buildContext: '$(Build.SourcesDirectory)'
+        repository: $(imageName)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(azure-container-registry)
+        tags: |
+          latest
+          $(build.buildNumber)
+
+    #- task: Docker@2
+    #  displayName: Push an image to container registry
+    #  inputs:
+    #    command: push
+    #    repository: $(imageName)
+    #    tags: |
+    #      latest
+    #      $(build.buildNumber)
+
+    - powershell: |
+        Set-Content -Path "$(Build.ArtifactStagingDirectory)/$(appName)" -Value (docker inspect $(container-registery-loginname)/$(imageName):latest -f '{{ .Id }}')
+      displayName: Saving container hashes
