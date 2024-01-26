@@ -23,7 +23,7 @@ variables:
 #- name: system_accesstoken
 #  value : $(System.AccessToken)
 - name: container-registery-loginname
-  value: lcaodev1
+  value: lcaodev1.azurecr.io
 
 stages:
 - stage: Build
