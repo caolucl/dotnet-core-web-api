@@ -22,6 +22,9 @@ variables:
   value: lcaodev1ACR
 #- name: system_accesstoken
 #  value : $(System.AccessToken)
+- name: container-registery-loginname
+  value: lcaodev1
+  value: 
 
 stages:
 - stage: Build
@@ -53,14 +56,15 @@ stages:
           latest
           $(build.buildNumber)
 
-    #- task: Docker@2
-    #  displayName: Push an image to container registry
-    #  inputs:
-    #    command: push
-    #    repository: $(imageName)
-    #    tags: |
-    #      latest
-    #      $(build.buildNumber)
+    - task: Docker@2
+      displayName: Push an image to container registry
+      inputs:
+        containerRegistry: 'lcaodev1ACR'
+        repository: '$(imageName)'
+        command: 'push'
+        tags: |
+          latest
+          $(build.buildNumber)
 
     - powershell: |
         Set-Content -Path "$(Build.ArtifactStagingDirectory)/$(appName)" -Value (docker inspect $(container-registery-loginname)/$(imageName):latest -f '{{ .Id }}')
