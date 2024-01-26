@@ -24,6 +24,8 @@ variables:
   value : '$(Build.SourcesDirectory)/Dockerfile'
 - name: imageName
   value: sample/$(appName)
+- name: azure-container-registry
+  value: lcaodev1
 #- name: system_accesstoken
 #  value : $(System.AccessToken)
 
