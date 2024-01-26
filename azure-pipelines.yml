@@ -64,7 +64,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          #docker export $(container-registery-loginname)/$(imageName):latest -o $(imageName).tar.gz
+          docker export lcaodev1.azurecr.io/sample/aspnet-api:latest -o $(imageName).tar.gz
           docker images
         workingDirectory: '$(Build.ArtifactStagingDirectory)'
     - task: Docker@2
