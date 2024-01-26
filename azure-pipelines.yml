@@ -19,7 +19,7 @@ variables:
 - name: imageName
   value: sample/$(appName)
 - name: azure-container-registry
-  value: lcaodev1
+  value: lcaodev1ACR
 #- name: system_accesstoken
 #  value : $(System.AccessToken)
 
