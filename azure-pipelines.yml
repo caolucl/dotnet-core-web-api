@@ -24,7 +24,6 @@ variables:
 #  value : $(System.AccessToken)
 - name: container-registery-loginname
   value: lcaodev1
-  value: 
 
 stages:
 - stage: Build
