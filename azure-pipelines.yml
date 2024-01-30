@@ -28,7 +28,7 @@ variables:
 
 stages:
 - stage: Build
-  displayName: Build and push stage
+  displayName: Build and push artifact stage
   jobs:
   - job: Build
     displayName: Build
@@ -94,3 +94,28 @@ stages:
         script: |
           docker rmi lcaodev1.azurecr.io/sample/aspnet-api:latest
         workingDirectory: '$(Build.ArtifactStagingDirectory)'
+
+- stage: Check_And_Push
+  displayName: Check docker image and push
+  jobs:
+  - job: CheckImage
+    displayName: Check
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - checkout: none
+      persistCredentials: true
+    - task: DownloadBuildArtifacts@1
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: '$(container-registery-loginname)_latest.tar.gz'
+        itemPattern: 'drop/**'
+        downloadPath: '$(System.ArtifactsDirectory)'
+        cleanDestinationFolder: true
+    
+    - task: CmdLine@2
+      inputs:
+        script: |
+          tar -xf $(container-registery-loginname)_latest.tar.gz
+        workingDirectory: '$(System.ArtifactsDirectory)/drop'
