@@ -108,8 +108,7 @@ stages:
     - task: DownloadBuildArtifacts@1
       inputs:
         buildType: 'current'
-        downloadType: 'single'
-        artifactName: '$(container-registery-loginname)_latest.tar.gz'
+        downloadType: 'specific'
         itemPattern: 'drop/**'
         downloadPath: '$(System.ArtifactsDirectory)'
         cleanDestinationFolder: true
