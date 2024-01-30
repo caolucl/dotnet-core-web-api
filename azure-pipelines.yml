@@ -147,6 +147,6 @@ stages:
       displayName: "Run trivy scan"
       inputs:
         script: |
-            trivy image --exit-code 0 --severity LOW,MEDIUM --format template --template "@templates/junit.tpl" -o junit-report-low-med.xml $(container-registery-loginname)/$(imageName):latest 
-            trivy image --exit-code 1 --severity HIGH,CRITICAL --format template --template "@templates/junit.tpl" -o junit-report-high-crit.xml $(container-registery-loginname)/$(imageName):latest
+            trivy image --exit-code 0 --severity LOW,MEDIUM  $(container-registery-loginname)/$(imageName):latest 
+            trivy image --exit-code 1 --severity HIGH,CRITICAL  $(container-registery-loginname)/$(imageName):latest
 
