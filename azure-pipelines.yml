@@ -96,6 +96,9 @@ stages:
         workingDirectory: '$(Build.ArtifactStagingDirectory)'
 
 - stage: Check_And_Push
+  dependsOn:
+  - Build
+  condition: successed('Build')
   displayName: Check docker image and push
   jobs:
   - job: CheckImage
@@ -125,5 +128,6 @@ stages:
     #    workingDirectory: '$(System.ArtifactsDirectory)/drop'
     - script: |
         docker load < $(container-registery-loginname)_latest.tar.gz
+        docker images
       workingDirectory: '$(System.ArtifactsDirectory)/drop'
       displayName: import docker image
