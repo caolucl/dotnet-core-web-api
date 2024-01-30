@@ -105,6 +105,11 @@ stages:
     steps:
     - checkout: none
       persistCredentials: true
+
+    # Install docker
+    - task: DockerInstaller@0
+      inputs:
+        dockerVersion: '17.09.0-ce'
     - task: DownloadBuildArtifacts@1
       inputs:
         buildType: 'current'
@@ -113,8 +118,12 @@ stages:
         downloadPath: '$(System.ArtifactsDirectory)'
         cleanDestinationFolder: true
     
-    - task: CmdLine@2
-      inputs:
-        script: |
-          tar -xf $(container-registery-loginname)_latest.tar.gz
-        workingDirectory: '$(System.ArtifactsDirectory)/drop'
+    #- task: CmdLine@2
+    #  inputs:
+    #    script: |
+    #      tar -xf $(container-registery-loginname)_latest.tar.gz
+    #    workingDirectory: '$(System.ArtifactsDirectory)/drop'
+    - script: |
+        docker load < $(container-registery-loginname)_latest.tar.gz
+      workingDirectory: '$(System.ArtifactsDirectory)/drop'
+      displayName: import docker image
