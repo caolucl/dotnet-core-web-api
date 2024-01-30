@@ -64,10 +64,16 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          docker export lcaodev1.azurecr.io/sample/aspnet-api:latest -o $(imageName).tar.gz
-          docker save --output $(imageName).tar.gz $(container-registery-loginname)/$(imageName):latest
+          #docker export lcaodev1.azurecr.io/sample/aspnet-api:latest -o $(imageName).tar.gz
+          #docker save --output $(imageName).tar.gz $(container-registery-loginname)/$(imageName):latest
+          docker save $(container-registery-loginname)/$(imageName):latest | gzip > $(container-registery-loginname)_latest.tar.gz
           docker images
         workingDirectory: '$(Build.ArtifactStagingDirectory)'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(container-registery-loginname)_latest.tar.gz'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
     - task: Docker@2
       displayName: Push an image to container registry
       inputs:
