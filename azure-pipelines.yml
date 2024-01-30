@@ -1,10 +1,11 @@
-trigger:
-  branches:
-    include:
-    - refs/heads/main
+#trigger:
+#  branches:
+#    include:
+#    - refs/heads/main
   #paths:
   # include:
   #   - aspnet-api/*
+trigger: none
 resources:
   repositories:
   - repository: self
@@ -74,16 +75,22 @@ stages:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(container-registery-loginname)_latest.tar.gz'
         ArtifactName: 'drop'
         publishLocation: 'Container'
-    - task: Docker@2
-      displayName: Push an image to container registry
-      inputs:
-        containerRegistry: 'lcaodev1ACR'
-        repository: '$(imageName)'
-        command: 'push'
-        tags: |
-          latest
-          $(build.buildNumber)
+    #- task: Docker@2
+    #  displayName: Push an image to container registry
+    #  inputs:
+    #    containerRegistry: 'lcaodev1ACR'
+    #    repository: '$(imageName)'
+    #    command: 'push'
+    #    tags: |
+    #      latest
+    #      $(build.buildNumber)
 
     - powershell: |
         Set-Content -Path "$(Build.ArtifactStagingDirectory)/$(appName)" -Value (docker inspect $(container-registery-loginname)/$(imageName):latest -f '{{ .Id }}')
       displayName: Saving container hashes
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          docker rmi lcaodev1.azurecr.io/sample/aspnet-api:latest
+        workingDirectory: '$(Build.ArtifactStagingDirectory)'
