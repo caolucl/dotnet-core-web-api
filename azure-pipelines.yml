@@ -5,6 +5,8 @@
   #paths:
   # include:
   #   - aspnet-api/*
+pool:
+  vmImage: 'ubuntu-latest'
 trigger: none
 resources:
   repositories:
@@ -25,6 +27,8 @@ variables:
 #  value : $(System.AccessToken)
 - name: container-registery-loginname
   value: lcaodev1.azurecr.io
+- name: trivyVersion
+  value: 0.44.1
 
 stages:
 - stage: Build
