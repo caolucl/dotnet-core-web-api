@@ -98,7 +98,7 @@ stages:
 - stage: Check_And_Push
   dependsOn:
   - Build
-  condition: successed('Build')
+  condition: succeeded('Build')
   displayName: Check docker image and push
   jobs:
   - job: CheckImage
